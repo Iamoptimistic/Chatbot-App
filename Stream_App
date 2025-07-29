@@ -1,0 +1,32 @@
+import streamlit as st
+import difflib
+
+# Simple FAQ-style bot for Parvovirus Enteritis
+st.set_page_config(page_title="ParvoBot", layout="centered")
+st.title("🐶 ParvoBot: Ask me about Parvovirus Enteritis!")
+
+# Sample Q&A knowledge base
+faq = {
+    "what is parvovirus enteritis": "Parvovirus enteritis is a severe, contagious viral disease in dogs caused by the canine parvovirus, leading to vomiting, diarrhea, and dehydration.",
+    "what causes parvovirus enteritis": "It is caused by canine parvovirus type 2 (CPV-2), which is spread through contact with infected feces or contaminated environments.",
+    "how is it transmitted": "The virus is shed in the feces of infected dogs and is highly resistant in the environment, making it easy to spread via contaminated surfaces or people.",
+    "what are the symptoms": "Symptoms include lethargy, loss of appetite, severe vomiting, foul-smelling bloody diarrhea, and fever.",
+    "how is it treated": "There is no specific antiviral treatment. Supportive care like fluid therapy, antibiotics for secondary infections, and antiemetics is vital.",
+    "how can it be prevented": "Vaccination is the most effective way to prevent parvovirus. Puppies should follow a vaccination schedule starting at 6–8 weeks."
+}
+
+# Get user input
+user_input = st.text_input("Ask your question:")
+
+if user_input:
+    # Normalize user input
+    user_question = user_input.lower().strip()
+
+    # Find the closest match from the FAQ keys
+    closest_match = difflib.get_close_matches(user_question, faq.keys(), n=1, cutoff=0.4)
+
+    if closest_match:
+        response = faq[closest_match[0]]
+        st.success(response)
+    else:
+        st.warning("Sorry, I don't know the answer to that yet. Try rephrasing or asking about symptoms, causes, or prevention.")
