@@ -1,7 +1,7 @@
 
 import streamlit as st
 import difflib
-pip install sentence-transformers
+
 
 # Simple FAQ-style bot for Parvovirus Enteritis
 st.set_page_config(page_title="ParvoBot", layout="centered")
