@@ -16,15 +16,17 @@ faq = {
 }
 
 # Get user input
-user_input = st.text_input("Ask your question:")
+import difflib
 
 if user_input:
-    response = None
-    for question, answer in faq.items():
-        if question in user_input.lower():
-            response = answer
-            break
-    if response:
+    # Normalize user input
+    user_question = user_input.lower().strip()
+
+    # Find the closest match from the FAQ keys
+    closest_match = difflib.get_close_matches(user_question, faq.keys(), n=1, cutoff=0.4)
+
+    if closest_match:
+        response = faq[closest_match[0]]
         st.success(response)
     else:
         st.warning("Sorry, I don't know the answer to that yet. Try rephrasing or asking about symptoms, causes, or prevention.")
