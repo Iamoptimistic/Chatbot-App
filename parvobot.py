@@ -58,35 +58,6 @@ faq = {
 "can my other pets get sick from an infected dog": "Parvovirus does not infect humans or species like cats or birds. However, other dogs in the household are at risk if they are not fully vaccinated. All surfaces, bedding, and items should be disinfected to prevent transmission."
 }
 
-from sentence_transformers import SentenceTransformer, util
-import torch
-
-# Load model
-model = SentenceTransformer('all-MiniLM-L6-v2')
-
-# Prepare your FAQ
-questions = list(faq_data.keys())
-question_embeddings = model.encode(questions, convert_to_tensor=True)
-
-def get_answer(user_input, threshold=0.6):
-    user_embedding = model.encode(user_input, convert_to_tensor=True)
-    cosine_scores = util.cos_sim(user_embedding, question_embeddings)[0]
-
-    top_result = torch.argmax(cosine_scores).item()
-    top_score = cosine_scores[top_result].item()
-
-    if top_score >= threshold:
-        matched_question = questions[top_result]
-        return faq_data[matched_question]
-    else:
-        return "Sorry, I don't know the answer to that yet. Try asking about symptoms, treatment, or prevention."
-
-# Example usage
-print(get_answer("what is parvo in dogs?"))  # Should match "what is parvovirus enteritis"
-
-
-"""
-
 # Get user input
 user_input = st.text_input("Ask your question:")
 
@@ -102,4 +73,3 @@ if user_input:
         st.success(response)
     else:
         st.warning("Sorry, I don't know the answer to that yet. Try rephrasing or asking about symptoms, causes, or prevention.")
-"""
