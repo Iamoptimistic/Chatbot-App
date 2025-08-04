@@ -57,9 +57,7 @@ if user_input:
     # Check confidence threshold
     if best_match["similarity"] > 0.4:
         answer = best_match["Answer"]
-        disease = best_match["Disease"]
-        category = best_match["Category"]
-        response = friendly_wrap(f"{answer} _(Disease: {disease}, Category: {category})_")
+        response = friendly_wrap(f"{answer}_")
     else:
         response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
@@ -71,4 +69,5 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
