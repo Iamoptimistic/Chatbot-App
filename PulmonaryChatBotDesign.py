@@ -4,7 +4,7 @@ import random
 from sentence_transformers import SentenceTransformer, util
 
 # Set page config
-st.set_page_config(page_title="PedsPulmoBot", layout="wide")
+st.set_page_config(page_title="PedsPulmoBot", layout="centered")
 
 # Load model and data
 @st.cache_resource
@@ -44,11 +44,11 @@ st.markdown("""
         overflow-y: auto;
         padding: 1rem;
         border: 1px solid #ddd;
-        background-color: #f9f9f9;
+        background-color: #0000FF;
         border-radius: 10px;
     }
     .user-bubble {
-        background-color: #DCF8C6;
+        background-color: #008000;
         padding: 10px;
         border-radius: 10px;
         margin-bottom: 10px;
@@ -68,17 +68,17 @@ st.markdown("""
         gap: 10px;
     }
     .title-style {
-        font-size: 30px;
+        font-size: 100px;
         font-weight: bold;
         margin-bottom: 0.5rem;
-        color: #333;
+        color: #008000;
     }
     </style>
 """, unsafe_allow_html=True)
 
 # Title
 st.markdown('<p class="title-style">🤖 PedsPulmoBot: Your Pediatric Pulmonology Assistant</p>', unsafe_allow_html=True)
-st.markdown("Ask about causes, symptoms, treatment, or prevention of childhood asthma, CF, BPD, and more!")
+st.markdown("Ask me about paediatric pulmonary diseases")
 
 # Input box
 user_input = st.text_input("Type your question here...", key="chat_input")
@@ -96,7 +96,7 @@ if user_input:
         answer = best_match["Answer"]
         disease = best_match["Disease"]
         category = best_match["Category"]
-        response = friendly_wrap(f"{answer} _(Disease: {disease}, Category: {category})_")
+        response = friendly_wrap(f"{answer}_")
     else:
         response = "I'm not sure about that yet. Try asking a more specific question about a disease or condition."
 
@@ -110,3 +110,4 @@ for sender, message in st.session_state.chat_history:
     else:
         st.markdown(f'<div class="bot-bubble">🤖 {message}</div>', unsafe_allow_html=True)
 st.markdown('</div>', unsafe_allow_html=True)
+
