@@ -5,7 +5,7 @@ from sentence_transformers import SentenceTransformer, util
 
 # Page config
 st.set_page_config(page_title="PedsPulmoBot", layout="centered")
-st.title("👶 PedsPulmoBot: Ask Me About Pediatric Pulmonary Diseases")
+st.title("PedsPulmoBot: Ask Me About Pediatric Pulmonary Diseases")
 st.sidebar.markdown(" This bot is built by Abdulateef, Amaka and Agede")
 
 # Load model (cached)
@@ -55,7 +55,7 @@ if user_input:
     best_match = faq.loc[faq["similarity"].idxmax()]
 
     # Check confidence threshold
-    if best_match["similarity"] > 0.4:
+    if best_match["similarity"] > 0.8:
         answer = best_match["Answer"]
         response = friendly_wrap(f"{answer}_")
     else:
@@ -69,5 +69,6 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
