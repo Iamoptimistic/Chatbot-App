@@ -30,7 +30,6 @@ def friendly_wrap(answer):
         "Sure thing! ",
         "Great question. ",
         "Absolutely! ",
-        "Here's what I can tell you: ",
         "You got it! ",
     ]
     return random.choice(openings) + answer
@@ -55,9 +54,9 @@ if user_input:
     best_match = faq.loc[faq["similarity"].idxmax()]
 
     # Check confidence threshold
-    if best_match["similarity"] > 0.8:
+    if best_match["similarity"] > 0.7:
         answer = best_match["Answer"]
-        response = friendly_wrap(f"{answer}_")
+        response = friendly_wrap(f"{answer}")
     else:
         response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
@@ -69,6 +68,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
