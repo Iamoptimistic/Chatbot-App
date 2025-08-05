@@ -61,6 +61,8 @@ if user_input:
         response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
     st.session_state.chat_history.append(("bot", response))
+    with st.spinner("Thinking..."):
+    time.sleep(1.5)  # mimic typing
 
 # Display conversation
 for sender, message in st.session_state.chat_history:
@@ -68,6 +70,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
