@@ -11,7 +11,7 @@ st.sidebar.markdown(" This bot is built by Abdulateef, Amaka and Agede")
 # Load model (cached)
 @st.cache_resource
 def load_model():
-    return SentenceTransformer('all-mpnet-base-v2')
+    return SentenceTransformer('all-MiniLM-L6-v2')
 
 model = load_model()
 
@@ -68,6 +68,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
