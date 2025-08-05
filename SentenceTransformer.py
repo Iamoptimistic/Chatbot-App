@@ -5,8 +5,8 @@ from sentence_transformers import SentenceTransformer, util
 
 # Page config
 st.set_page_config(page_title="PedsPulmoBot", layout="centered")
-st.title("PedsPulmoBot: Ask Me About Pediatric Pulmonary Diseases")
-st.sidebar.markdown(" This bot is built by Abdulateef, Amaka and Agede")
+st.title("🫁 PedsPulmoBot: Ask Me About Pediatric Pulmonary Diseases")
+st.sidebar.markdown("👨‍⚕️ This bot is built by Abdulateef, Amaka and Agede")
 
 # Load model (cached)
 @st.cache_resource
@@ -23,16 +23,17 @@ def load_data():
     return df
 
 faq = load_data()
+
 # Sidebar disease filter
 disease_filter = st.sidebar.selectbox("🩺 Filter by Disease", ["All Diseases"] + sorted(faq["Disease"].unique()))
 
-# Filter the dataset based on selection
+# Apply filter to the dataset
 if disease_filter != "All Diseases":
     filtered_faq = faq[faq["Disease"] == disease_filter].copy()
 else:
     filtered_faq = faq.copy()
 
-# Friendly wrap
+# Friendly answer wrapper
 def friendly_wrap(answer):
     openings = [
         "Sure thing! ",
@@ -42,7 +43,7 @@ def friendly_wrap(answer):
     ]
     return random.choice(openings) + answer
 
-# Initialize chat
+# Initialize chat history
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
@@ -57,16 +58,16 @@ if user_input:
     user_embedding = model.encode(user_input, convert_to_tensor=True)
 
     # Compute cosine similarity with stored questions
-similarities = [float(util.cos_sim(user_embedding, emb)) for emb in filtered_faq["embedding"]]
-filtered_faq["similarity"] = similarities
-best_match = filtered_faq.loc[filtered_faq["similarity"].idxmax()]
+    similarities = [float(util.cos_sim(user_embedding, emb)) for emb in filtered_faq["embedding"]]
+    filtered_faq["similarity"] = similarities
+    best_match = filtered_faq.loc[filtered_faq["similarity"].idxmax()]
 
     # Check confidence threshold
     if best_match["similarity"] > 0.6:
         answer = best_match["Answer"]
-        response = friendly_wrap(f"{answer}")
+        response = friendly_wrap(answer)
     else:
-        response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
+        response = "🤔 I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
     st.session_state.chat_history.append(("bot", response))
 
@@ -76,15 +77,3 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
-
-
-
-
-
-
-
-
-
-
-
-
