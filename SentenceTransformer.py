@@ -23,6 +23,14 @@ def load_data():
     return df
 
 faq = load_data()
+# Sidebar disease filter
+disease_filter = st.sidebar.selectbox("🩺 Filter by Disease", ["All Diseases"] + sorted(faq["Disease"].unique()))
+
+# Filter the dataset based on selection
+if disease_filter != "All Diseases":
+    filtered_faq = faq[faq["Disease"] == disease_filter].copy()
+else:
+    filtered_faq = faq.copy()
 
 # Friendly wrap
 def friendly_wrap(answer):
@@ -49,9 +57,9 @@ if user_input:
     user_embedding = model.encode(user_input, convert_to_tensor=True)
 
     # Compute cosine similarity with stored questions
-    similarities = [float(util.cos_sim(user_embedding, emb)) for emb in faq["embedding"]]
-    faq["similarity"] = similarities
-    best_match = faq.loc[faq["similarity"].idxmax()]
+   similarities = [float(util.cos_sim(user_embedding, emb)) for emb in filtered_faq["embedding"]]
+filtered_faq["similarity"] = similarities
+best_match = filtered_faq.loc[filtered_faq["similarity"].idxmax()]
 
     # Check confidence threshold
     if best_match["similarity"] > 0.6:
@@ -68,6 +76,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
