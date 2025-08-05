@@ -11,7 +11,7 @@ st.sidebar.markdown(" This bot is built by Abdulateef, Amaka and Agede")
 # Load model (cached)
 @st.cache_resource
 def load_model():
-    return SentenceTransformer('all-MiniLM-L6-v2')
+    return SentenceTransformer('multi-qa-mpnet-base-dot-v1')
 
 model = load_model()
 
@@ -61,8 +61,6 @@ if user_input:
         response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
     st.session_state.chat_history.append(("bot", response))
-    with st.spinner("Thinking..."):
-    time.sleep(1.5)  # mimic typing
 
 # Display conversation
 for sender, message in st.session_state.chat_history:
@@ -70,6 +68,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
