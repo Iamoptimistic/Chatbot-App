@@ -57,7 +57,7 @@ if user_input:
     user_embedding = model.encode(user_input, convert_to_tensor=True)
 
     # Compute cosine similarity with stored questions
-   similarities = [float(util.cos_sim(user_embedding, emb)) for emb in filtered_faq["embedding"]]
+similarities = [float(util.cos_sim(user_embedding, emb)) for emb in filtered_faq["embedding"]]
 filtered_faq["similarity"] = similarities
 best_match = filtered_faq.loc[filtered_faq["similarity"].idxmax()]
 
@@ -76,6 +76,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
