@@ -54,7 +54,7 @@ if user_input:
     best_match = faq.loc[faq["similarity"].idxmax()]
 
     # Check confidence threshold
-    if best_match["similarity"] > 0.7:
+    if best_match["similarity"] > 0.5:
         answer = best_match["Answer"]
         response = friendly_wrap(f"{answer}")
     else:
@@ -68,6 +68,7 @@ for sender, message in st.session_state.chat_history:
         st.markdown(f"**You:** {message}")
     else:
         st.markdown(f"**PedsPulmoBot:** {message}")
+
 
 
 
