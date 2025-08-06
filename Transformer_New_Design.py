@@ -133,5 +133,5 @@ if user_input:
         response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
     st.session_state.chat_history.append(("bot", response))
-    st.experimental_rerun()
+
 
