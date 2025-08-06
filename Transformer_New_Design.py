@@ -6,41 +6,46 @@ from sentence_transformers import SentenceTransformer, util
 # Page config
 st.set_page_config(page_title="PedsPulmoBot", layout="centered")
 
-# Inject custom CSS for sticky header and footer
+# Inject improved CSS
 st.markdown("""
     <style>
+        /* Reset top padding so title is visible */
+        .main {
+            padding-top: 120px !important;
+            padding-bottom: 100px !important;
+        }
+
         /* Sticky header */
         .title-container {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
-            background: white;
-            z-index: 999;
-            padding-top: 1rem;
-            padding-bottom: 0.5rem;
-            border-bottom: 1px solid #ddd;
+            background-color: white;
+            z-index: 1000;
+            padding: 1rem 1rem 0.5rem 1rem;
+            border-bottom: 1px solid #ccc;
         }
 
-        /* Push content below the title */
+        /* Chat messages container */
         .content-container {
-            padding-top: 100px;
-            padding-bottom: 100px;
+            overflow-y: auto;
+            max-height: 70vh;
+            padding: 1rem 0.5rem;
+            margin-bottom: 120px; /* Space for the input */
         }
 
-        /* Sticky footer */
         .footer-container {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
             background: white;
+            z-index: 1000;
+            border-top: 1px solid #ccc;
             padding: 1rem;
-            border-top: 1px solid #ddd;
-            z-index: 999;
         }
 
-        /* Chat messages styling */
         .chat-message {
             margin-bottom: 0.75rem;
         }
@@ -62,14 +67,14 @@ st.markdown('<div class="title-container"><h2>PedsPulmoBot: Ask Me About Pediatr
 # Sidebar
 st.sidebar.markdown("👨‍⚕️ This bot is built by Abdulateef, Amaka and Agede")
 
-# Load model (cached)
+# Load model
 @st.cache_resource
 def load_model():
     return SentenceTransformer('all-MiniLM-L6-v2')
 
 model = load_model()
 
-# Load data and precompute embeddings (cached)
+# Load data
 @st.cache_data
 def load_data():
     df = pd.read_csv("pediatric_pulmonology_QA_dataset_complete.csv")
@@ -81,29 +86,15 @@ faq = load_data()
 # Disease Filter
 disease_filter = st.sidebar.selectbox("🩺 Filter by Disease", ["All Diseases"] + sorted(faq["Disease"].unique()))
 
-if disease_filter != "All Diseases":
-    filtered_faq = faq[faq["Disease"] == disease_filter].copy()
-else:
-    filtered_faq = faq.copy()
+filtered_faq = faq if disease_filter == "All Diseases" else faq[faq["Disease"] == disease_filter].copy()
 
-# Friendly response wrapper
-def friendly_wrap(answer):
-    openings = [
-        "Sure thing! ",
-        "Great question. ",
-        "Absolutely! ",
-        "You got it! ",
-    ]
-    return random.choice(openings) + answer
-
-# Chat history
+# Chat memory
 if "chat_history" not in st.session_state:
     st.session_state.chat_history = []
 
-# Content container
+# Chat area
 st.markdown('<div class="content-container">', unsafe_allow_html=True)
 
-# Display chat messages
 for sender, message in st.session_state.chat_history:
     if sender == "user":
         st.markdown(f'<div class="chat-message user-message">**You:** {message}</div>', unsafe_allow_html=True)
@@ -112,11 +103,10 @@ for sender, message in st.session_state.chat_history:
 
 st.markdown('</div>', unsafe_allow_html=True)
 
-# Fixed Footer (Input box)
-with st.container():
-    st.markdown('<div class="footer-container">', unsafe_allow_html=True)
-    user_input = st.text_input("Type your question here:", key="chat_input", label_visibility="collapsed")
-    st.markdown('</div>', unsafe_allow_html=True)
+# Input at bottom
+st.markdown('<div class="footer-container">', unsafe_allow_html=True)
+user_input = st.text_input("Type your question here:", key="chat_input", label_visibility="collapsed")
+st.markdown('</div>', unsafe_allow_html=True)
 
 # Handle input
 if user_input:
@@ -128,10 +118,13 @@ if user_input:
     best_match = filtered_faq.loc[filtered_faq["similarity"].idxmax()]
 
     if best_match["similarity"] > 0.4:
-        response = friendly_wrap(best_match["Answer"])
+        response = random.choice([
+            "Sure thing! ",
+            "Great question. ",
+            "Absolutely! ",
+            "You got it! ",
+        ]) + best_match["Answer"]
     else:
         response = "I'm not confident about that answer. Try asking a more specific question about a disease or topic."
 
     st.session_state.chat_history.append(("bot", response))
-
-
